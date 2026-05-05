@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "nexton:block/machine/side",
+    "down": "nexton:block/machine/bottom",
+    "up": "nexton:block/machine/top",
+    "north": "nexton:block/generator",
+    "east": "nexton:block/machine/side",
+    "south": "nexton:block/machine/side",
+    "west": "nexton:block/machine/side"
+  }
+}
