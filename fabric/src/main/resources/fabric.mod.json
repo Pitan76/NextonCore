@@ -3,24 +3,24 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "${mod_name}",
-  "description": "A mod introduces various machines and processing units used for automation, and resource transformation. It expands gameplay with industrial-scale production systems.",
+  "description": "A foundational mod that provides shared systems, APIs, and base mechanics required by all other Nexton modules. It ensures compatibility and acts as the backbone of the entire Nexton ecosystem.",
   "authors": [
     "Pitan"
   ],
   "contact": {
-    "sources": "https://github.com/Pitan76/NextonMachinery",
-    "issues": "https://github.com/Pitan76/NextonMachinery/issues",
-    "homepage": "https://curseforge.com/minecraft/mc-mods/nexton-machinery"
+    "sources": "https://github.com/Pitan76/NextonCore",
+    "issues": "https://github.com/Pitan76/NextonCore/issues",
+    "homepage": "https://curseforge.com/minecraft/mc-mods/nexton-core"
   },
   "license": "MIT",
-  "icon": "assets/nextonmachinery/icon.png",
+  "icon": "assets/nextoncore/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.pitan76.nexton.machinery.fabric.NextonMachineryFabric"
+      "net.pitan76.nexton.core.fabric.NextonCoreFabric"
     ],
     "client": [
-      "net.pitan76.nexton.machinery.fabric.NextonMachineryClientFabric"
+      "net.pitan76.nexton.core.fabric.NextonCoreClientFabric"
     ]
   },
   "depends": {
