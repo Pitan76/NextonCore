@@ -34,7 +34,7 @@ subprojects {
         // Fabric Yarn Mappings
         mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
 
-        modApi "net.pitan76:mcpitanlib-common-${rootProject.mcpitanlib_version}"
+        modImplementation "net.pitan76:mcpitanlib-common-${rootProject.mcpitanlib_version}"
     }
 
     /*
