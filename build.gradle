@@ -40,7 +40,8 @@ subprojects {
         mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
 
         modImplementation "net.pitan76:mcpitanlib-common-${rootProject.mcpitanlib_version}"
-        modImplementation "net.pitan76:nextonmachinery:${rootProject.mod_version}"
+//        modImplementation "net.pitan76:nextonmachinery:${rootProject.mod_version}"
+        modImplementation "net.pitan76:nextonmachinery:1.0.0"
     }
 
     /*
