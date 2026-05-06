@@ -22,6 +22,11 @@ subprojects {
         maven { url "https://maven.neoforged.net/releases" }
         maven { url "https://maven.pitan76.net/" }
         maven { url "https://maven.shedaniel.me/" }
+        flatDir {
+            dirs(
+                    "${project.rootDir}/../machinery/common/build/libs",
+            )
+        }
         mavenLocal()
     }
 
@@ -35,6 +40,7 @@ subprojects {
         mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
 
         modImplementation "net.pitan76:mcpitanlib-common-${rootProject.mcpitanlib_version}"
+        modImplementation "net.pitan76:nextonmachinery:${rootProject.mod_version}"
     }
 
     /*
