@@ -9,6 +9,7 @@ import net.pitan76.mcpitanlib.api.event.block.TileCreateEvent;
 import net.pitan76.mcpitanlib.api.event.tile.TileTickEvent;
 import net.pitan76.mcpitanlib.api.tile.CompatBlockEntity;
 import net.pitan76.mcpitanlib.api.tile.ExtendBlockEntityTicker;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
 
 public abstract class BlockWithBlockEntity extends CompatBlock implements ExtendBlockEntityProvider {
 
@@ -33,6 +34,11 @@ public abstract class BlockWithBlockEntity extends CompatBlock implements Extend
         public final BlockWithBlockEntity block;
 
         public LinkedBlockEntity(BlockEntityType<?> type, TileCreateEvent e, BlockWithBlockEntity block) {
+            super(type, e);
+            this.block = block;
+        }
+
+        public LinkedBlockEntity(BlockEntityTypeWrapper type, TileCreateEvent e, BlockWithBlockEntity block) {
             super(type, e);
             this.block = block;
         }

@@ -1,6 +1,5 @@
 package net.pitan76.nexton.core.api.block;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.pitan76.mcpitanlib.api.block.ExtendBlockEntityProvider;
 import net.pitan76.mcpitanlib.api.block.args.v2.PlacementStateArgs;
 import net.pitan76.mcpitanlib.api.block.v2.CompatibleBlockSettings;
@@ -58,9 +57,9 @@ public abstract class MachineBlock extends CompatBlock implements ExtendBlockEnt
     public void onStateReplaced(StateReplacedEvent e) {
         e.spawnDropsInContainer();
         if (e.hasBlockEntity()) {
-            BlockEntity blockEntity = e.getBlockEntity();
-            if (blockEntity instanceof IEnergyStorage) {
-                EnergyStorageManager.removeEnergyStorage((IEnergyStorage) blockEntity);
+            BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
+            if (blockEntity.instanceOf(IEnergyStorage.class)) {
+                EnergyStorageManager.removeEnergyStorage((IEnergyStorage) blockEntity.get());
             }
         }
 

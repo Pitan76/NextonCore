@@ -15,7 +15,7 @@ public class RebornEnergyRegister {
 
     private static final Map<IEnergyStorage, TREnergyStorage> energyStorageMap = new HashMap<>();
 
-    protected static BlockApiLookupWithDirection<EnergyStorage> SIDED = BlockApiLookupWithDirection.ofDir(EnergyStorage.SIDED);
+    public static BlockApiLookupWithDirection<EnergyStorage> SIDED = BlockApiLookupWithDirection.ofDir(EnergyStorage.SIDED);
 
     public static boolean isInitialized = false;
 
