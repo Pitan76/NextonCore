@@ -1,5 +1,6 @@
 package net.pitan76.nexton.core.fabric.compat;
 
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.pitan76.nexton.core.Config;
 import net.pitan76.nexton.core.api.energy.IEnergyStorage;
 import team.reborn.energy.api.EnergyStorage;
@@ -38,9 +39,15 @@ public class TREnergyStorageWrapper implements IEnergyStorage {
         long delta = energy - currentEnergy;
 
         if (delta > 0) {
-            getStorage().insert((long) (delta / CONVERSION_RATE), null);
+            try (Transaction transaction = Transaction.openOuter()) {
+                getStorage().insert((long) (delta / CONVERSION_RATE), transaction);
+                transaction.commit();
+            }
         } else if (delta < 0) {
-            getStorage().extract((long) (-delta / CONVERSION_RATE), null);
+            try (Transaction transaction = Transaction.openOuter()) {
+                getStorage().extract((long) (-delta / CONVERSION_RATE), transaction);
+                transaction.commit();
+            }
         }
     }
 
