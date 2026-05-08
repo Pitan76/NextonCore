@@ -1,4 +1,4 @@
-package net.pitan76.nexton.core.api.energy.util.fabric;
+package net.pitan76.nexton.core.api.util.fabric;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;

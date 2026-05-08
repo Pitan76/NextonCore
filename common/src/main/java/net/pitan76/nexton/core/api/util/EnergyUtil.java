@@ -8,7 +8,6 @@ import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
-import net.pitan76.nexton.core.NextonCore;
 import net.pitan76.nexton.core.api.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
