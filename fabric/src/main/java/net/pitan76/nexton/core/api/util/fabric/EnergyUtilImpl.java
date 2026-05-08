@@ -12,7 +12,7 @@ import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.EnergyStorageUtil;
 
-import static net.pitan76.nexton.machinery.NextonMachinery.isLoadedTeamRebornEnergy;
+import static net.pitan76.nexton.core.api.energy.EnergyStorageManager.isLoadedTeamRebornEnergy;
 
 public class EnergyUtilImpl {
     public static boolean canTransferOther(BlockEntity from, BlockEntity to, long maxAmount) {
