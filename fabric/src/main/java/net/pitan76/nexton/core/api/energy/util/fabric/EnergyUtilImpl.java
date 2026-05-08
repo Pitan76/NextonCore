@@ -1,8 +1,13 @@
 package net.pitan76.nexton.core.api.energy.util.fabric;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.nexton.core.api.util.EnergyUtil;
 import net.pitan76.nexton.core.fabric.compat.RebornEnergyRegister;
 import net.pitan76.nexton.core.api.energy.IEnergyStorage;
+import net.pitan76.nexton.core.fabric.compat.TREnergyStorageWrapper;
+import org.jetbrains.annotations.Nullable;
 import reborncore.common.powerSystem.PowerAcceptorBlockEntity;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.EnergyStorageUtil;
@@ -53,5 +58,26 @@ public class EnergyUtilImpl {
         if (!isLoadedTeamRebornEnergy()) return false;
 
         return blockEntity instanceof PowerAcceptorBlockEntity;
+    }
+
+    public static boolean isEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
+        BlockEntityWrapper blockEntity = world.getBlockEntity(pos);
+        if (!isLoadedTeamRebornEnergy()) return EnergyUtil.isEnergyStorage(blockEntity);
+
+        if (blockEntity.isEmpty()) return false;
+        EnergyStorage energyStorage = RebornEnergyRegister.SIDED.find(world, pos, side);
+
+        return energyStorage != null;
+    }
+
+    public static IEnergyStorage getEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
+        BlockEntityWrapper blockEntity = world.getBlockEntity(pos);
+        if (blockEntity.isEmpty()) return null;
+        if (blockEntity.get() instanceof IEnergyStorage) return (IEnergyStorage) blockEntity.get();
+
+        if (!isLoadedTeamRebornEnergy()) return null;
+
+        EnergyStorage energyStorage = RebornEnergyRegister.SIDED.find(blockEntity.getWorld(), blockEntity.getPos(), side);
+        return TREnergyStorageWrapper.of(energyStorage);
     }
 }

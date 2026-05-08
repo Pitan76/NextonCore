@@ -6,7 +6,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
+import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
+import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.nexton.core.NextonCore;
 import net.pitan76.nexton.core.api.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 public class EnergyUtil {
     public static long transfer(IEnergyStorage from, IEnergyStorage to, long maxAmount) {
@@ -97,6 +101,38 @@ public class EnergyUtil {
 
     @ExpectPlatform
     public static boolean isTeamRebornEnergyStorage(BlockEntity blockEntity) {
-        throw new AssertionError();
+        return false;
+    }
+
+    public static boolean isEnergyStorage(BlockEntity blockEntity) {
+        return blockEntity instanceof IEnergyStorage || isTeamRebornEnergyStorage(blockEntity);
+    }
+
+    public static boolean isEnergyStorage(BlockEntityWrapper blockEntity) {
+        if (blockEntity.isEmpty()) return false;
+        return isEnergyStorage(blockEntity.get());
+    }
+
+    @ExpectPlatform
+    public static boolean isEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
+        BlockEntityWrapper blockEntity = world.getBlockEntity(pos);
+        return isEnergyStorage(blockEntity);
+    }
+
+    public static IEnergyStorage getEnergyStorage(BlockEntity blockEntity) {
+        return getEnergyStorage(BlockEntityWrapper.of(blockEntity));
+    }
+
+    public static IEnergyStorage getEnergyStorage(BlockEntityWrapper blockEntity) {
+        return getEnergyStorage(blockEntity.getWorld(), blockEntity.getPos(), null);
+    }
+
+    @ExpectPlatform
+    public static IEnergyStorage getEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
+        BlockEntityWrapper blockEntity = world.getBlockEntity(pos);
+        if (blockEntity.isEmpty()) return null;
+        if (blockEntity.get() instanceof IEnergyStorage) return (IEnergyStorage) blockEntity.get();
+
+        return null;
     }
 }
