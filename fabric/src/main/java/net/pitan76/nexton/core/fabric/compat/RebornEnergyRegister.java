@@ -49,8 +49,8 @@ public class RebornEnergyRegister {
 
     public static void registerEnergyStorage(BlockEntityTypeWrapper blockEntityType) {
         SIDED.registerForBlockEntityWrapperM((blockEntity, dir) -> {
-            if (!(blockEntity instanceof IEnergyStorage)) return null;
-            IEnergyStorage storage = (IEnergyStorage) blockEntity;
+            if (!(blockEntity.get() instanceof IEnergyStorage)) return null;
+            IEnergyStorage storage = (IEnergyStorage) blockEntity.get();
 
             return getEnergyStorage(storage);
         }, blockEntityType);
