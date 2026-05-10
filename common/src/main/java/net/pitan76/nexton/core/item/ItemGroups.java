@@ -14,7 +14,7 @@ public class ItemGroups {
 
     public static void init() {
         if (PlatformUtil.isModLoaded("nextonmachinery"))
-            NI_GROUP.setIcon(() -> ItemWrapper.of(NextonMachinery._id("generator")).createStack().toMinecraft());
+            NI_GROUP.setIconM(() -> ItemWrapper.of(NextonMachinery._id("generator")).createStack());
 
         registry.registerItemGroup(NI_GROUP);
     }
