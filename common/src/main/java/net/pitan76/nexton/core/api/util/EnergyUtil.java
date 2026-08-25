@@ -1,13 +1,14 @@
 package net.pitan76.nexton.core.api.util;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.EnergyLookup;
 import net.pitan76.mcpitanlib.api.util.WorldUtil;
 import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.nexton.core.api.energy.EnergyStorageBridge;
 import net.pitan76.nexton.core.api.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,12 +43,11 @@ public class EnergyUtil {
     }
 
     public static long transfer(BlockEntity from, BlockEntity to, long maxAmount) {
-        if (isTeamRebornEnergyStorage(from) || isTeamRebornEnergyStorage(to)) {
-            return transferOther(from, to, maxAmount);
-        }
+        IEnergyStorage fromStorage = getEnergyStorage(from);
+        IEnergyStorage toStorage = getEnergyStorage(to);
+        if (fromStorage == null || toStorage == null) return 0;
 
-        if (!(from instanceof IEnergyStorage) || !(to instanceof IEnergyStorage)) return 0;
-        return transfer((IEnergyStorage) from, (IEnergyStorage) to, maxAmount);
+        return transfer(fromStorage, toStorage, maxAmount);
     }
 
     @Deprecated
@@ -57,23 +57,11 @@ public class EnergyUtil {
     }
 
     public static boolean canTransfer(BlockEntity from, BlockEntity to, long maxAmount) {
-        if (isTeamRebornEnergyStorage(from) || isTeamRebornEnergyStorage(to)) {
-            return canTransferOther(from, to, maxAmount);
-        }
+        IEnergyStorage fromStorage = getEnergyStorage(from);
+        IEnergyStorage toStorage = getEnergyStorage(to);
+        if (fromStorage == null || toStorage == null) return false;
 
-        if (!(from instanceof IEnergyStorage) || !(to instanceof IEnergyStorage)) return false;
-
-        return canTransfer((IEnergyStorage) from, (IEnergyStorage) to);
-    }
-
-    @ExpectPlatform
-    public static boolean canTransferOther(BlockEntity from, BlockEntity to, long maxAmount) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static long transferOther(BlockEntity from, BlockEntity to, long maxAmount) {
-        throw new AssertionError();
+        return canTransfer(fromStorage, toStorage);
     }
 
     public static boolean transferNearby(BlockEntity from, long maxAmount) {
@@ -98,13 +86,8 @@ public class EnergyUtil {
         return false;
     }
 
-    @ExpectPlatform
-    public static boolean isTeamRebornEnergyStorage(BlockEntity blockEntity) {
-        return false;
-    }
-
     public static boolean isEnergyStorage(BlockEntity blockEntity) {
-        return blockEntity instanceof IEnergyStorage || isTeamRebornEnergyStorage(blockEntity);
+        return getEnergyStorage(blockEntity) != null;
     }
 
     public static boolean isEnergyStorage(BlockEntityWrapper blockEntity) {
@@ -112,26 +95,30 @@ public class EnergyUtil {
         return isEnergyStorage(blockEntity.get());
     }
 
-    @ExpectPlatform
     public static boolean isEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
-        BlockEntityWrapper blockEntity = world.getBlockEntity(pos);
-        return isEnergyStorage(blockEntity);
+        return getEnergyStorage(world, pos, side) != null;
     }
 
+    @Nullable
     public static IEnergyStorage getEnergyStorage(BlockEntity blockEntity) {
-        return getEnergyStorage(BlockEntityWrapper.of(blockEntity));
+        if (blockEntity == null) return null;
+        if (blockEntity instanceof IEnergyStorage) return (IEnergyStorage) blockEntity;
+
+        return EnergyStorageBridge.fromMPLorNull(EnergyLookup.ENERGY.find(blockEntity, null));
     }
 
+    @Nullable
     public static IEnergyStorage getEnergyStorage(BlockEntityWrapper blockEntity) {
-        return getEnergyStorage(blockEntity.getWorld(), blockEntity.getPos(), null);
+        if (blockEntity.isEmpty()) return null;
+        return getEnergyStorage(blockEntity.get());
     }
 
-    @ExpectPlatform
+    @Nullable
     public static IEnergyStorage getEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
         BlockEntityWrapper blockEntity = world.getBlockEntity(pos);
         if (blockEntity.isEmpty()) return null;
         if (blockEntity.get() instanceof IEnergyStorage) return (IEnergyStorage) blockEntity.get();
 
-        return null;
+        return EnergyStorageBridge.fromMPLorNull(EnergyLookup.ENERGY.find(world, pos, side));
     }
 }

@@ -1,7 +1,5 @@
 package net.pitan76.nexton.core;
 
-import net.pitan76.mcpitanlib.api.event.v0.EventRegistry;
-import net.pitan76.nexton.core.api.energy.EnergyStorageManager;
 import net.pitan76.nexton.core.item.ItemGroups;
 import net.pitan76.mcpitanlib.api.CommonModInitializer;
 import net.pitan76.mcpitanlib.api.registry.v2.CompatRegistryV2;
@@ -19,7 +17,6 @@ public class NextonCore extends CommonModInitializer {
 
     public NextonCore() {
         super();
-        EnergyStorageManager.registerEnergyStorage();
     }
 
     @Override
@@ -28,10 +25,6 @@ public class NextonCore extends CommonModInitializer {
         registry = super.registry;
 
         ItemGroups.init();
-
-        EventRegistry.ServerLifecycle.serverStopped((server) -> {
-            EnergyStorageManager.clearEnergyStorage();
-        });
     }
 
     // ----

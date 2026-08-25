@@ -1,38 +1,22 @@
 package net.pitan76.nexton.core.api.energy;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.entity.BlockEntityType;
 import net.pitan76.mcpitanlib.api.registry.result.RegistryResult;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.EnergyLookup;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
 
 public class EnergyStorageManager {
-    @ExpectPlatform
-    public static boolean isLoadedTeamRebornEnergy() {
-        return false;
+    public static boolean isSupported() {
+        return EnergyLookup.ENERGY.isSupported();
     }
 
-    @ExpectPlatform
-    public static void registerEnergyStorage() {
-
-    }
-
-    @ExpectPlatform
     public static void registerEnergyStorage(RegistryResult<BlockEntityType<?>> blockEntityType) {
-
+        EnergyLookup.ENERGY.registerForBlockEntity((blockEntity, direction) ->
+                EnergyStorageBridge.toMPL(blockEntity), blockEntityType.get());
     }
 
-    @ExpectPlatform
     public static void registerEnergyStorage(BlockEntityTypeWrapper blockEntityType) {
-
-    }
-
-    @ExpectPlatform
-    public static void clearEnergyStorage() {
-
-    }
-
-    @ExpectPlatform
-    public static void removeEnergyStorage(IEnergyStorage storage) {
-
+        EnergyLookup.ENERGY.registerForBlockEntityWrapper((blockEntity, direction) ->
+                EnergyStorageBridge.toMPL(blockEntity.get()), blockEntityType);
     }
 }

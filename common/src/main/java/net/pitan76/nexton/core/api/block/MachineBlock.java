@@ -56,13 +56,6 @@ public abstract class MachineBlock extends CompatBlock implements ExtendBlockEnt
     @Override
     public void onStateReplaced(StateReplacedEvent e) {
         e.spawnDropsInContainer();
-        if (e.hasBlockEntity()) {
-            BlockEntityWrapper blockEntity = e.getBlockEntityWrapper();
-            if (blockEntity.instanceOf(IEnergyStorage.class)) {
-                EnergyStorageManager.removeEnergyStorage((IEnergyStorage) blockEntity.get());
-            }
-        }
-
         super.onStateReplaced(e);
     }
 
