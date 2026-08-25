@@ -1,13 +1,10 @@
 package net.pitan76.nexton.core.api.util;
 
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.pitan76.mcpitanlib.api.transfer.energy.v1.EnergyLookup;
-import net.pitan76.mcpitanlib.api.util.WorldUtil;
-import net.pitan76.mcpitanlib.api.util.math.PosUtil;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
+import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
+import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.nexton.core.api.energy.EnergyStorageBridge;
 import net.pitan76.nexton.core.api.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
@@ -37,12 +34,12 @@ public class EnergyUtil {
     }
 
     @Deprecated
-    public static boolean transfer(BlockEntity from, BlockEntity to) {
-        if (!(from instanceof IEnergyStorage) || !(to instanceof IEnergyStorage)) return false;
-        return transfer((IEnergyStorage) from, (IEnergyStorage) to) > 0;
+    public static boolean transfer(BlockEntityWrapper from, BlockEntityWrapper to) {
+        if (!from.instanceOf(IEnergyStorage.class) || !to.instanceOf(IEnergyStorage.class)) return false;
+        return transfer((IEnergyStorage) from.get(), (IEnergyStorage) to.get()) > 0;
     }
 
-    public static long transfer(BlockEntity from, BlockEntity to, long maxAmount) {
+    public static long transfer(BlockEntityWrapper from, BlockEntityWrapper to, long maxAmount) {
         IEnergyStorage fromStorage = getEnergyStorage(from);
         IEnergyStorage toStorage = getEnergyStorage(to);
         if (fromStorage == null || toStorage == null) return 0;
@@ -51,12 +48,12 @@ public class EnergyUtil {
     }
 
     @Deprecated
-    public static boolean canTransfer(BlockEntity from, BlockEntity to) {
-        if (!(from instanceof IEnergyStorage) || !(to instanceof IEnergyStorage)) return false;
-        return canTransfer((IEnergyStorage) from, (IEnergyStorage) to);
+    public static boolean canTransfer(BlockEntityWrapper from, BlockEntityWrapper to) {
+        if (!from.instanceOf(IEnergyStorage.class) || !to.instanceOf(IEnergyStorage.class)) return false;
+        return canTransfer((IEnergyStorage) from.get(), (IEnergyStorage) to.get());
     }
 
-    public static boolean canTransfer(BlockEntity from, BlockEntity to, long maxAmount) {
+    public static boolean canTransfer(BlockEntityWrapper from, BlockEntityWrapper to, long maxAmount) {
         IEnergyStorage fromStorage = getEnergyStorage(from);
         IEnergyStorage toStorage = getEnergyStorage(to);
         if (fromStorage == null || toStorage == null) return false;
@@ -64,21 +61,27 @@ public class EnergyUtil {
         return canTransfer(fromStorage, toStorage);
     }
 
-    public static boolean transferNearby(BlockEntity from, long maxAmount) {
+    public static boolean transferNearby(BlockEntityWrapper from, long maxAmount) {
         World world = from.getWorld();
         BlockPos pos = from.getPos();
 
-        if (world == null) return false;
+        if (world.isNull()) return false;
 
-        BlockPos[] nearPositions = PosUtil.getNeighborPoses(pos);
-        for (BlockPos nearPos : nearPositions) {
-            if (!WorldUtil.hasBlockEntity(world, nearPos)) continue;
+        IEnergyStorage fromStorage = getEnergyStorage(from);
+        if (fromStorage == null) return false;
 
-            BlockEntity to = WorldUtil.getBlockEntity(world, nearPos);
-            if (to == null) continue;
+        for (Direction dir : Direction.values()) {
+            BlockPos nearPos = pos.offset(dir);
+            if (!world.hasBlockEntity(nearPos)) continue;
 
-            if (canTransfer(from, to, maxAmount)) {
-                transfer(from, to, maxAmount);
+            BlockEntityWrapper to = world.getBlockEntity(nearPos);
+            if (to.isEmpty()) continue;
+
+            IEnergyStorage toStorage = getEnergyStorage(to, dir.getOpposite());
+            if (toStorage == null) continue;
+
+            if (canTransfer(fromStorage, toStorage)) {
+                transfer(fromStorage, toStorage, maxAmount);
                 return true;
             }
         }
@@ -86,38 +89,34 @@ public class EnergyUtil {
         return false;
     }
 
-    public static boolean isEnergyStorage(BlockEntity blockEntity) {
-        return getEnergyStorage(blockEntity) != null;
-    }
-
     public static boolean isEnergyStorage(BlockEntityWrapper blockEntity) {
         if (blockEntity.isEmpty()) return false;
-        return isEnergyStorage(blockEntity.get());
+        return isEnergyStorage(blockEntity);
     }
 
-    public static boolean isEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
+    public static boolean isEnergyStorage(World world, BlockPos pos, @Nullable Direction side) {
         return getEnergyStorage(world, pos, side) != null;
     }
 
     @Nullable
-    public static IEnergyStorage getEnergyStorage(BlockEntity blockEntity) {
+    public static IEnergyStorage getEnergyStorage(BlockEntityWrapper blockEntity, @Nullable Direction side) {
         if (blockEntity == null) return null;
-        if (blockEntity instanceof IEnergyStorage) return (IEnergyStorage) blockEntity;
+        if (blockEntity.instanceOf(IEnergyStorage.class)) return (IEnergyStorage) blockEntity.get();
 
-        return EnergyStorageBridge.fromMPLorNull(EnergyLookup.ENERGY.find(blockEntity, null));
+        return EnergyStorageBridge.fromMPLorNull(EnergyLookup.ENERGY.find(blockEntity, side));
     }
 
     @Nullable
     public static IEnergyStorage getEnergyStorage(BlockEntityWrapper blockEntity) {
         if (blockEntity.isEmpty()) return null;
-        return getEnergyStorage(blockEntity.get());
+        return getEnergyStorage(blockEntity, null);
     }
 
     @Nullable
-    public static IEnergyStorage getEnergyStorage(net.pitan76.mcpitanlib.midohra.world.World world, net.pitan76.mcpitanlib.midohra.util.math.BlockPos pos, @Nullable Direction side) {
+    public static IEnergyStorage getEnergyStorage(World world, BlockPos pos, @Nullable Direction side) {
         BlockEntityWrapper blockEntity = world.getBlockEntity(pos);
         if (blockEntity.isEmpty()) return null;
-        if (blockEntity.get() instanceof IEnergyStorage) return (IEnergyStorage) blockEntity.get();
+        if (blockEntity.instanceOf(IEnergyStorage.class)) return (IEnergyStorage) blockEntity.get();
 
         return EnergyStorageBridge.fromMPLorNull(EnergyLookup.ENERGY.find(world, pos, side));
     }
