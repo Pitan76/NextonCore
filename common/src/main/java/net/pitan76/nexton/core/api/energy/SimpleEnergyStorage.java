@@ -1,12 +1,16 @@
 package net.pitan76.nexton.core.api.energy;
 
-public class SimpleEnergyStorage implements IEnergyStorage {
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.IMutableEnergyStorage;
+
+public class SimpleEnergyStorage implements IMutableEnergyStorage {
     private long stored = 0;
     private final long capacity;
     private final long maxInput;
     private final long maxOutput;
     private final boolean canExtract;
     private final boolean canInsert;
+
+    private boolean conduit = false;
 
     public SimpleEnergyStorage(long capacity, long maxInput, long maxOutput, boolean canExtract, boolean canInsert) {
         this.capacity = capacity;
@@ -84,6 +88,16 @@ public class SimpleEnergyStorage implements IEnergyStorage {
         return canInsert;
     }
 
+    @Override
+    public boolean isEnergyConduit() {
+        return conduit;
+    }
+
+    public SimpleEnergyStorage setConduit(boolean conduit) {
+        this.conduit = conduit;
+        return this;
+    }
+
     public static class Builder {
         private long defaultStored;
         private long capacity;
@@ -91,6 +105,7 @@ public class SimpleEnergyStorage implements IEnergyStorage {
         private long maxOutput;
         private boolean canExtract;
         private boolean canInsert;
+        private boolean conduit;
 
         public Builder defaultStored(long defaultStored) {
             this.defaultStored = defaultStored;
@@ -124,8 +139,13 @@ public class SimpleEnergyStorage implements IEnergyStorage {
             return this;
         }
 
+        public Builder conduit(boolean conduit) {
+            this.conduit = conduit;
+            return this;
+        }
+
         public SimpleEnergyStorage build() {
-            return of(defaultStored, capacity, maxInput, maxOutput, canExtract, canInsert);
+            return of(defaultStored, capacity, maxInput, maxOutput, canExtract, canInsert).setConduit(conduit);
         }
     }
 

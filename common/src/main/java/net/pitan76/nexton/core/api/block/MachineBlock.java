@@ -17,7 +17,6 @@ import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.World;
 import net.pitan76.nexton.core.api.energy.EnergyStorageManager;
-import net.pitan76.nexton.core.api.energy.IEnergyStorage;
 import net.pitan76.nexton.core.api.state.IActiveHolder;
 import net.pitan76.nexton.core.api.state.NextonProperties;
 import net.pitan76.nexton.core.api.block.entity.MachineBlockEntityWithExtendedContainer;

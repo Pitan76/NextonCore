@@ -6,10 +6,10 @@ import net.pitan76.mcpitanlib.api.event.nbt.ReadNbtArgs;
 import net.pitan76.mcpitanlib.api.event.nbt.WriteNbtArgs;
 import net.pitan76.mcpitanlib.guilib.api.block.entity.BlockEntityWithContainer;
 import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityTypeWrapper;
-import net.pitan76.nexton.core.api.energy.IEnergyStorage;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.IMutableEnergyStorage;
 import net.pitan76.nexton.core.api.state.ICompatBlockEntityMachine;
 
-public abstract class MachineBlockEntityWithContainer extends BlockEntityWithContainer implements IEnergyStorage, ICompatBlockEntityMachine {
+public abstract class MachineBlockEntityWithContainer extends BlockEntityWithContainer implements IMutableEnergyStorage, ICompatBlockEntityMachine {
     public MachineBlockEntityWithContainer(BlockEntityType<?> type, TileCreateEvent e) {
         super(type, e);
     }

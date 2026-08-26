@@ -1,6 +1,9 @@
 package net.pitan76.nexton.core.api.energy;
 
-public interface EnergyStorageProvider extends IEnergyStorage {
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.IEnergyStorage;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.IMutableEnergyStorage;
+
+public interface EnergyStorageProvider extends IMutableEnergyStorage {
     IEnergyStorage getEnergyStorage();
 
     @Override
@@ -36,5 +39,15 @@ public interface EnergyStorageProvider extends IEnergyStorage {
     @Override
     default boolean canInsertEnergy() {
         return getEnergyStorage().canInsertEnergy();
+    }
+
+    @Override
+    default long insertEnergy(long amount, boolean simulate) {
+        return getEnergyStorage().insertEnergy(amount, simulate);
+    }
+
+    @Override
+    default long extractEnergy(long amount, boolean simulate) {
+        return getEnergyStorage().extractEnergy(amount, simulate);
     }
 }

@@ -5,8 +5,7 @@ import net.pitan76.mcpitanlib.midohra.block.entity.BlockEntityWrapper;
 import net.pitan76.mcpitanlib.midohra.util.math.BlockPos;
 import net.pitan76.mcpitanlib.midohra.util.math.Direction;
 import net.pitan76.mcpitanlib.midohra.world.World;
-import net.pitan76.nexton.core.api.energy.EnergyStorageBridge;
-import net.pitan76.nexton.core.api.energy.IEnergyStorage;
+import net.pitan76.mcpitanlib.api.transfer.energy.v1.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyUtil {
@@ -103,7 +102,7 @@ public class EnergyUtil {
         if (blockEntity == null) return null;
         if (blockEntity.instanceOf(IEnergyStorage.class)) return (IEnergyStorage) blockEntity.get();
 
-        return EnergyStorageBridge.fromMPLorNull(EnergyLookup.ENERGY.find(blockEntity, side));
+        return EnergyLookup.ENERGY.find(blockEntity, side);
     }
 
     @Nullable
@@ -118,6 +117,6 @@ public class EnergyUtil {
         if (blockEntity.isEmpty()) return null;
         if (blockEntity.instanceOf(IEnergyStorage.class)) return (IEnergyStorage) blockEntity.get();
 
-        return EnergyStorageBridge.fromMPLorNull(EnergyLookup.ENERGY.find(world, pos, side));
+        return EnergyLookup.ENERGY.find(world, pos, side);
     }
 }
